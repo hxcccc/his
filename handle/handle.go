@@ -1,7 +1,7 @@
 package handle
 
 import (
-	"github.com/labstack/gommon/log"
+	"log"
 	"io"
 	"io/ioutil"
 	"net/http"
