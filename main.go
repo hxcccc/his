@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/labstack/gommon/log"
+	"log"
 	"his/handle"
 	"net/http"
 )
