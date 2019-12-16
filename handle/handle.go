@@ -1,11 +1,14 @@
 package handle
 
 import (
+	"his/meta"
+	"his/util"
 	"log"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"os"
+	"time"
 )
 
 func UploadHandler(w http.ResponseWriter, r *http.Request)  {
@@ -25,16 +28,26 @@ func UploadHandler(w http.ResponseWriter, r *http.Request)  {
 		}
 		defer file.Close()
 
-		newFile, err := os.Create("/tmp/" + head.Filename)
+		fileMeta := meta.FileMeta{
+			FileName:head.Filename,
+			Location:"/tmp" + head.Filename,
+			UploadAt:time.Now().Format("2006-01-02 15:04:05"),
+		}
+
+		newFile, err := os.Create(fileMeta.Location)
 		if err != nil {
 			log.Panic(err)
 		}
 		defer newFile.Close()
 
-		_, err = io.Copy(newFile, file)
+		fileMeta.FileSize, err = io.Copy(newFile, file)
 		if err != nil {
 			log.Panic(err)
 		}
+
+		newFile.Seek(0, 0)
+		fileMeta.FileSha1 = util.FileSha1(newFile)
+		meta.UpdateFileMeta(fileMeta)
 
 		http.Redirect(w, r, "/file/upload/succ", http.StatusFound)
 	}
