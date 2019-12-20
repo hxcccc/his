@@ -108,6 +108,8 @@ func FileMetaUploadHandler(w http.ResponseWriter, r *http.Request) {
 
 	curFileMeta := meta.GetFileMeta(fileSha1)
 	curFileMeta.FileName = newFileName
+	os.Rename(curFileMeta.Location, "/tmp/" + newFileName)
+	curFileMeta.Location = "/tmp/" + newFileName
 	meta.UpdateFileMeta(curFileMeta)
 
 	data, err := json.Marshal(curFileMeta)
