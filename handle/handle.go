@@ -110,7 +110,7 @@ func FileMetaUploadHandler(w http.ResponseWriter, r *http.Request) {
 	curFileMeta.FileName = newFileName
 	os.Rename(curFileMeta.Location, "/tmp/" + newFileName)
 	curFileMeta.Location = "/tmp/" + newFileName
-	meta.UpdateFileMeta(curFileMeta)
+	_ = meta.UpdateFileMetaDB(curFileMeta)
 
 	data, err := json.Marshal(curFileMeta)
 	if err != nil {
@@ -130,4 +130,5 @@ func FileDelHandler(w http.ResponseWriter, r *http.Request) {
 
 	meta.RemoveFileMeta(fileSha1)
 	w.WriteHeader(http.StatusOK)
+	io.WriteString(w, "delete success")
 }
