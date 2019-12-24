@@ -30,6 +30,20 @@ func GetFileMeta(fileSha1 string) FileMeta {
 	return fileMetas[fileSha1]
 }
 
+func GetFileMetaDB(fileSha1 string) (FileMeta,error)  {
+	tfile, err := db.GetFileMeta(fileSha1)
+	if err != nil {
+		return FileMeta{},err
+	}
+	fmeta := FileMeta{
+		FileSha1:tfile.FileHash,
+		FileSize:tfile.FileSize.Int64,
+		FileName:tfile.FileName.String,
+		Location:tfile.FileAddr.String,
+	}
+	return fmeta,nil
+}
+
 func RemoveFileMeta(fileSha1 string) {
 	delete(fileMetas, fileSha1)
 }

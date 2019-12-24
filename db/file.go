@@ -1,6 +1,7 @@
 package db
 
 import (
+	"database/sql"
 	"fmt"
 	"his/db/mysql"
 )
@@ -26,4 +27,29 @@ func OnfileUploadFinished(filehash string, filename string, filesize int64, file
 		return true
 	}
 	return false
+}
+
+type TableFile struct {
+	FileHash string
+	FileName sql.NullString
+	FileSize sql.NullInt64
+	FileAddr sql.NullString
+}
+//GetFileMeta 从mysql获取文件元信息
+func GetFileMeta(filehash string) (*TableFile, error) {
+	Stmt, err := mysql.DBConn().Prepare(
+		"select file_sha1,file_addr, file_name,file_size frome tbl_file where file_sha1=? and status=1 limit 1")
+	if err != nil {
+		fmt.Println(err.Error())
+		return nil, err
+	}
+	defer Stmt.Close()
+
+	tfile := TableFile{}
+	err = Stmt.QueryRow(filehash).Scan(&tfile.FileHash, &tfile.FileAddr, &tfile.FileName, &tfile.FileSize)
+	if err != nil {
+		fmt.Println(err.Error())
+		return nil, err
+	}
+	return &tfile, nil
 }

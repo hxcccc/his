@@ -61,7 +61,12 @@ func UploadSuccHandler(w http.ResponseWriter, r *http.Request) {
 func GetFileMetaHandler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	fileHash := r.Form["filehash"][0]
-	fMeta := meta.GetFileMeta(fileHash)
+	fMeta,err := meta.GetFileMetaDB(fileHash)
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		io.WriteString(w,"no such file")
+		return
+	}
 	data, err := json.Marshal(fMeta)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -73,7 +78,12 @@ func GetFileMetaHandler(w http.ResponseWriter, r *http.Request) {
 func DownLoadHandler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	fsha1 := r.Form.Get("filehash")
-	fm := meta.GetFileMeta(fsha1)
+	fm, err := meta.GetFileMetaDB(fsha1)
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		io.WriteString(w, "no such file")
+		return
+	}
 	f, err := os.Open(fm.Location)
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
