@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"fmt"
 	"his/db/mysql"
-	"time"
 )
 //OnfileUploadFinished 文件上传完成，保存meta
 func OnfileUploadFinished(filehash string, filename string, filesize int64, fileaddr string) bool {
@@ -35,7 +34,7 @@ type TableFile struct {
 	FileName sql.NullString
 	FileSize sql.NullInt64
 	FileAddr sql.NullString
-	FileUpdataAt time.Time
+	FileUpdataAt []uint8
 }
 //GetFileMeta 从mysql获取文件元信息
 func GetFileMeta(filehash string) (*TableFile, error) {
@@ -48,7 +47,7 @@ func GetFileMeta(filehash string) (*TableFile, error) {
 	defer Stmt.Close()
 
 	tfile := TableFile{}
-	err = Stmt.QueryRow(filehash).Scan(&tfile.FileHash, &tfile.FileAddr, &tfile.FileName, &tfile.FileSize)
+	err = Stmt.QueryRow(filehash).Scan(&tfile.FileHash, &tfile.FileAddr, &tfile.FileName, &tfile.FileSize, &tfile.FileUpdataAt)
 	if err != nil {
 		fmt.Println(err.Error())
 		return nil, err

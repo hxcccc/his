@@ -40,7 +40,7 @@ func GetFileMetaDB(fileSha1 string) (FileMeta,error)  {
 		FileSize:tfile.FileSize.Int64,
 		FileName:tfile.FileName.String,
 		Location:tfile.FileAddr.String,
-		UploadAt:tfile.FileUpdataAt.String(),
+		UploadAt:string(tfile.FileUpdataAt),
 	}
 	return fmeta,nil
 }
