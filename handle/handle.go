@@ -126,7 +126,7 @@ func FileMetaUpdateHandler(w http.ResponseWriter, r *http.Request) {
 	os.Rename(curFileMeta.Location, "/tmp/" + newFileName)
 	curFileMeta.Location = "/tmp/" + newFileName
 	curFileMeta.UploadAt = time.Now().Format("2006-1-2 15:04:05")
-	_ = meta.UpdateFileMetaDB(curFileMeta)
+	_ = meta.ReplaceFileMetaDB(curFileMeta)
 
 	data, err := json.Marshal(curFileMeta)
 	if err != nil {
