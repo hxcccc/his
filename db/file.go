@@ -29,7 +29,7 @@ func OnfileUploadFinished(filehash string, filename string, filesize int64, file
 	return false
 }
 
-func UpdateFileDB(filehash string, filename string, filesize int64, fileaddr string) bool {
+func UpdateFileDB(filehash string, filename string, fileaddr string) bool {
 	stmt, err := mysql.DBConn().Prepare(
 		"update tbl_file set file_addr=?,file_name=? where file_sha1=?")
 	if err != nil {
