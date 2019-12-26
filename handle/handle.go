@@ -2,6 +2,7 @@ package handle
 
 import (
 	"encoding/json"
+	"fmt"
 	"his/meta"
 	"his/util"
 	"log"
@@ -100,7 +101,7 @@ func DownLoadHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(data)
 }
 //FileMetaUploadHandler 更新元信息接口(重命名)
-func FileMetaUploadHandler(w http.ResponseWriter, r *http.Request) {
+func FileMetaUpdateHandler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	opTpey := r.Form.Get("op")
 	fileSha1 := r.Form.Get("filehash")
@@ -116,10 +117,15 @@ func FileMetaUploadHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	curFileMeta := meta.GetFileMeta(fileSha1)
+	curFileMeta, err := meta.GetFileMetaDB(fileSha1)
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
 	curFileMeta.FileName = newFileName
 	os.Rename(curFileMeta.Location, "/tmp/" + newFileName)
 	curFileMeta.Location = "/tmp/" + newFileName
+	curFileMeta.UploadAt = time.Now().Format("2006-1-2 15:04:05")
 	_ = meta.UpdateFileMetaDB(curFileMeta)
 
 	data, err := json.Marshal(curFileMeta)

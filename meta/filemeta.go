@@ -25,6 +25,10 @@ func UpdateFileMetaDB(fmeta FileMeta) bool {
 	return db.OnfileUploadFinished(fmeta.FileSha1, fmeta.FileName, fmeta.FileSize, fmeta.Location)
 }
 
+func ReplaceFileMetaDB(meta FileMeta) bool {
+	return db.UpdateFileDB(meta.FileSha1, meta.FileName,meta.FileSize,meta.Location)
+}
+
 //GetFileMeta 通过sha1值获取文件元信息
 func GetFileMeta(fileSha1 string) FileMeta {
 	return fileMetas[fileSha1]

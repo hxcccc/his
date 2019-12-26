@@ -29,6 +29,29 @@ func OnfileUploadFinished(filehash string, filename string, filesize int64, file
 	return false
 }
 
+func UpdateFileDB(filehash string, filename string, filesize int64, fileaddr string) bool {
+	stmt, err := mysql.DBConn().Prepare(
+		"update tbl_file set file_addr=?,file_name=?,file_size=? where file_sha1=filehash")
+	if err != nil {
+		fmt.Println("Failed to prepare statement,err:", err.Error())
+		return false
+	}
+	defer stmt.Close()
+
+	ret, err := stmt.Exec(fileaddr, filename, filesize)
+	if err != nil {
+		fmt.Println(err.Error())
+		return false
+	}
+	if rf, err := ret.RowsAffected();err != nil {
+		if rf <= 0 {
+			fmt.Printf("update file info fail,filename:%s, filehash:%s\n", filename, filehash)
+		}
+		return true
+	}
+	return false
+}
+
 type TableFile struct {
 	FileHash string
 	FileName sql.NullString
