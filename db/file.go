@@ -31,14 +31,14 @@ func OnfileUploadFinished(filehash string, filename string, filesize int64, file
 
 func UpdateFileDB(filehash string, filename string, filesize int64, fileaddr string) bool {
 	stmt, err := mysql.DBConn().Prepare(
-		"update tbl_file set file_addr=?,file_name=?,file_size=? where file_sha1=?")
+		"update tbl_file set file_addr=?,file_name=? where file_sha1=?")
 	if err != nil {
 		fmt.Println("Failed to prepare statement,err:", err.Error())
 		return false
 	}
 	defer stmt.Close()
 
-	ret, err := stmt.Exec(fileaddr, filename, filesize ,filehash)
+	ret, err := stmt.Exec(fileaddr, filename,filehash)
 	if err != nil {
 		fmt.Println(err.Error())
 		return false

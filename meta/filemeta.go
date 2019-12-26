@@ -26,7 +26,7 @@ func UpdateFileMetaDB(fmeta FileMeta) bool {
 }
 
 func ReplaceFileMetaDB(meta FileMeta) bool {
-	return db.UpdateFileDB(meta.FileSha1, meta.FileName,meta.FileSize,meta.Location)
+	return db.UpdateFileDB(meta.FileSha1, meta.FileName,meta.Location)
 }
 
 //GetFileMeta 通过sha1值获取文件元信息
