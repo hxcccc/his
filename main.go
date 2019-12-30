@@ -14,6 +14,7 @@ func main() {
 	http.HandleFunc("/file/update", handle.FileMetaUpdateHandler)
 	http.HandleFunc("/file/delete", handle.FileDelHandler)
 	http.HandleFunc("/user/signup", handle.SignUpHandler)
+	http.HandleFunc("/user/signin", handle.SignInHandler)
 	err := http.ListenAndServe(":8888", nil)
 	if err != nil {
 		log.Panic(err)
