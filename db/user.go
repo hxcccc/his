@@ -51,7 +51,7 @@ func UserSignIn(username string, encpwd string) bool {
 //UpdateToken 刷新token
 func UpdateToken(username string, token string) bool {
 	stmt, err := mysql.DBConn().Prepare(
-		"replace into tbl_user_token (`user_name`,`user_token`) values (?.?)")
+		"replace into tbl_user_token (`user_name`,`user_token`) values (?,?)")
 	if err != nil {
 		fmt.Println(err.Error())
 		return false
