@@ -47,7 +47,7 @@ func SignInHandler(w http.ResponseWriter, r *http.Request) {
 	pwd := r.Form.Get("password")
 	encPasswd := util.Sha1([]byte(pwd + pwd_salt))
 	//1.校验用户名及密码
-	pwdChecked := db.UserSignUp(username, encPasswd)
+	pwdChecked := db.UserSignIn(username, encPasswd)
 	if !pwdChecked {
 		w.Write([]byte("FAILED"))
 		return
