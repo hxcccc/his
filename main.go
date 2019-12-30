@@ -13,6 +13,7 @@ func main() {
 	http.HandleFunc("/file/download", handle.DownLoadHandler)
 	http.HandleFunc("/file/update", handle.FileMetaUpdateHandler)
 	http.HandleFunc("/file/delete", handle.FileDelHandler)
+	http.HandleFunc("/user/signup", handle.SignUpHandler)
 	err := http.ListenAndServe(":8888", nil)
 	if err != nil {
 		log.Panic(err)
