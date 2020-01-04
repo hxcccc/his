@@ -60,7 +60,8 @@ func SignInHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	//3.登录成功后重定向到首页
-	w.Write([]byte("http://" + r.Host + "/static/view/home.html"))
+	//w.Write([]byte("http://" + r.Host + "/static/view/home.html"))
+	http.Redirect(w, r, "./static/view/home.html", 302)
 }
 
 func GenToken(username string) string {
