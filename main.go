@@ -16,6 +16,7 @@ func main() {
 	http.HandleFunc("/file/delete", handle.FileDelHandler)
 	http.HandleFunc("/user/signup", handle.SignUpHandler)
 	http.HandleFunc("/user/signin", handle.SignInHandler)
+	http.HandleFunc("/user/home", handle.UserHome)
 	err := http.ListenAndServe(":8888", nil)
 	if err != nil {
 		log.Panic(err)
