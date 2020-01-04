@@ -7,6 +7,7 @@ import (
 )
 
 func main() {
+	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))
 	http.HandleFunc("/file/upload", handle.UploadHandler)
 	http.HandleFunc("/file/upload/succ", handle.UploadSuccHandler)
 	http.HandleFunc("/file/meta", handle.GetFileMetaHandler)
