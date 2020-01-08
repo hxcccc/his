@@ -123,10 +123,7 @@ func IsTokenValid(username string, token string) bool {
 		return false
 	}
 	nowTs := time.Now().Unix()
-	if err != nil {
-		fmt.Println("ts:string to int64 failed")
-		return false
-	}
+
 	if keepTs := nowTs - tokenTs;keepTs > 86400 {
 		return false
 	}
