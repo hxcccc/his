@@ -117,12 +117,12 @@ func IsTokenValid(username string, token string) bool {
 		return false
 	}
 	//判断token的时效性是否过期
-	tokenTs, err := strconv.ParseInt(string(token[len(token)-8:]), 10, 64)
+	tokenTs, err := strconv.ParseInt(string(token[len(token)-8:]), 16, 64)
 	if err != nil {
 		fmt.Println("ts:string to int64 failed")
 		return false
 	}
-	nowTs, err := strconv.ParseInt(fmt.Sprintf("%x", time.Now().Unix())[:8], 10, 64)
+	nowTs := time.Now().Unix()
 	if err != nil {
 		fmt.Println("ts:string to int64 failed")
 		return false
