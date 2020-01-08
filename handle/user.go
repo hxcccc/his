@@ -5,7 +5,9 @@ import (
 	"his/db"
 	"his/util"
 	"io/ioutil"
+	"net"
 	"net/http"
+	"strconv"
 	"time"
 )
 
@@ -61,7 +63,47 @@ func SignInHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	//3.登录成功后重定向到首页
 	//w.Write([]byte("http://" + r.Host + "/static/view/home.html"))
-	http.Redirect(w, r, "/user/home", 302)
+	//http.Redirect(w, r, "/user/home", http.StatusFound)
+	resp := util.RespMsg{
+		Code:0,
+		Msg:"OK",
+		Data: struct {
+			Location string
+			Username string
+			Token string
+		}{
+			Location:"http://" + r.Host + "/static/view/home.html",
+			Username:username,
+			Token:token,
+		},
+	}
+	w.Write(resp.JSONBytes())
+}
+//UserInfoHandler 查询用户信息
+func UserInfoHandler(w http.ResponseWriter, r *http.Request) {
+	//解析请求参数
+	r.ParseForm()
+	username := r.Form.Get("username")
+	token := r.Form.Get("token")
+	//验证token
+	isValidToken := IsTokenValid(token)
+	if !isValidToken {
+		w.WriteHeader(http.StatusForbidden)
+		return
+	}
+	//查询用户信息
+	user, err := db.GetUserInfo(username)
+	if err != nil{
+		w.WriteHeader(http.StatusForbidden)
+		return
+	}
+	//组装并响应用户数据
+	resp := util.RespMsg{
+		Code:0,
+		Msg:"OK",
+		Data:user,
+	}
+	w.Write(resp.JSONBytes())
 }
 
 func GenToken(username string) string {
@@ -69,4 +111,30 @@ func GenToken(username string) string {
 	ts := fmt.Sprintf("%x",time.Now().Unix())
 	tokenPrefix := util.MD5([]byte(username + ts + "_tokensalt"))
 	return  tokenPrefix + ts[:8]
+}
+
+func IsTokenValid(username string, token string) bool {
+	if len(token) != 40 {
+		return false
+	}
+	//判断token的时效性是否过期
+	tokenTs, err := strconv.Atoi(string(token[len(token)-8:]))
+	if err != nil {
+		fmt.Println("ts:string to int failed")
+		return false
+	}
+	nowTs, err := strconv.Atoi(fmt.Sprintf("%x", time.Now().Unix())[:8])
+	if err != nil {
+		fmt.Println("ts:string to int failed")
+		return false
+	}
+	if keepTs := nowTs - tokenTs;keepTs > 86400 {
+		return false
+	}
+	//从数据库表中查询username对应的token信息//对比两个token是否一致
+	res := db.VerifyToken(username, token)
+	if !res {
+		return false
+	}
+	return true
 }
