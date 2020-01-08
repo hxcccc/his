@@ -5,7 +5,6 @@ import (
 	"his/db"
 	"his/util"
 	"io/ioutil"
-	"net"
 	"net/http"
 	"strconv"
 	"time"
@@ -86,7 +85,7 @@ func UserInfoHandler(w http.ResponseWriter, r *http.Request) {
 	username := r.Form.Get("username")
 	token := r.Form.Get("token")
 	//验证token
-	isValidToken := IsTokenValid(token)
+	isValidToken := IsTokenValid(username, token)
 	if !isValidToken {
 		w.WriteHeader(http.StatusForbidden)
 		return
