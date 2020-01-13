@@ -96,7 +96,7 @@ type User struct {
 	Username string
 	Email string
 	Phone string
-	SignUpAt string
+	SignupAt string
 	LastActiveAt string
 	Status int
 }
@@ -111,7 +111,7 @@ func GetUserInfo(username string) (User, error) {
 	}
 	defer stmt.Close()
 
-	err = stmt.QueryRow(username).Scan(&user.Username, &user.SignUpAt)
+	err = stmt.QueryRow(username).Scan(&user.Username, &user.SignupAt)
 	if err != nil {
 		return user, err
 	}
