@@ -83,13 +83,13 @@ func UserInfoHandler(w http.ResponseWriter, r *http.Request) {
 	//解析请求参数
 	r.ParseForm()
 	username := r.Form.Get("username")
-	token := r.Form.Get("token")
+//	token := r.Form.Get("token")
 	//验证token
-	isValidToken := IsTokenValid(username, token)
-	if !isValidToken {
-		w.WriteHeader(http.StatusForbidden)
-		return
-	}
+	//isValidToken := IsTokenValid(username, token)
+	//if !isValidToken {
+	//	w.WriteHeader(http.StatusForbidden)
+	//	return
+	//}
 	//查询用户信息
 	user, err := db.GetUserInfo(username)
 	if err != nil{
@@ -112,7 +112,7 @@ func GenToken(username string) string {
 	return  tokenPrefix + ts[:8]
 }
 
-func IsTokenValid(username string, token string) bool {
+func  IsTokenValid(username string, token string) bool {
 	if len(token) != 40 {
 		return false
 	}

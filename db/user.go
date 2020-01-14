@@ -66,7 +66,7 @@ func UpdateToken(username string, token string) bool {
 	return true
 }
 
-//UserSignIn 判断密码是否一致
+//VerifyToken 判断token是否合法
 func VerifyToken(username string, token string) bool {
 	stmt, err := mysql.DBConn().Prepare(
 		"select user_token from tbl_user_token where user_name=? limit 1")
