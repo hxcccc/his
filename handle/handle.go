@@ -3,6 +3,7 @@ package handle
 import (
 	"encoding/json"
 	"fmt"
+	"his/db"
 	"his/meta"
 	"his/util"
 	"log"
@@ -60,7 +61,18 @@ func UploadHandler(w http.ResponseWriter, r *http.Request)  {
 		fileMeta.FileSha1 = util.FileSha1(newFile)
 		_ = meta.UpdateFileMetaDB(fileMeta)
 
-		http.Redirect(w, r, "/file/upload/succ", http.StatusFound)
+		//TODO: 更新用户文件表记录
+		r.ParseForm()
+		username := r.Form.Get("username")
+		suc := db.OnUserFileUploadFinished(username, fileMeta.FileSha1, fileMeta.FileName,
+			fileMeta.FileSize)
+		if suc{
+			http.Redirect(w, r, "/static/view/home.html", http.StatusFound)
+		}else {
+			w.Write([]byte("Upload Failed"))
+		}
+
+		//http.Redirect(w, r, "/file/upload/succ", http.StatusFound)
 	}
 }
 //UploadSuccHandler: 上传已完成
