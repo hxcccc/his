@@ -18,6 +18,7 @@ func main() {
 	http.HandleFunc("/user/signin", handle.SignInHandler)
 	http.HandleFunc("/user/home", handle.UserHome)
 	http.HandleFunc("/user/info", handle.HTTPinterceptor(handle.UserInfoHandler))
+	http.HandleFunc("/file/query", handle.FileQueryHandler)
 	err := http.ListenAndServe(":8888", nil)
 	if err != nil {
 		log.Panic(err)
