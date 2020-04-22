@@ -72,8 +72,12 @@ func GetFileMeta(filehash string) (*TableFile, error) {
 	tfile := TableFile{}
 	err = Stmt.QueryRow(filehash).Scan(&tfile.FileHash, &tfile.FileAddr, &tfile.FileName, &tfile.FileSize, &tfile.FileUpdataAt)
 	if err != nil {
-		fmt.Println(err.Error())
-		return nil, err
+		if err == sql.ErrNoRows {
+			return nil, nil
+		} else {
+			fmt.Println(err.Error())
+			return nil, err
+		}
 	}
 	return &tfile, nil
 }
