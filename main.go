@@ -19,6 +19,10 @@ func main() {
 	http.HandleFunc("/user/home", handle.UserHome)
 	http.HandleFunc("/file/fastupload", handle.HTTPinterceptor(handle.TryFastUploadHandler))
 
+	//分块上传接口
+	http.HandleFunc("/file/mpupload/init", handle.HTTPinterceptor(handle.InitialMultipartUploadHandler))
+	http.HandleFunc("/file/mpupload/uppart", handle.HTTPinterceptor(handle.UploadPartHandler))
+	http.HandleFunc("/file/mpupload/complete", handle.HTTPinterceptor(handle.CompleteUploadHandler))
 
 	//用户相关接口
 	http.HandleFunc("/user/signup", handle.SignUpHandler)
