@@ -43,7 +43,7 @@ func InitialMultipartUploadHandler(w http.ResponseWriter, r *http.Request) {
 		FileSize:filesize,
 		UploadID:username+fmt.Sprintf("%x", time.Now().UnixNano()),
 		ChunkSize:5*1024*1024,
-		ChunkCount:int(math.Ceil(float64(filesize/(5*1024*1024)))),
+		ChunkCount:int(math.Ceil(float64(filesize)/(5*1024*1024))),
 	}
 	//初始化信息写入redis缓存
 	rConn.Do("HSET", "MP_"+upinfo.UploadID, "chunkcount", upinfo.ChunkCount)
