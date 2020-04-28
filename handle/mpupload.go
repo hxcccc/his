@@ -41,7 +41,7 @@ func InitialMultipartUploadHandler(w http.ResponseWriter, r *http.Request) {
 	upinfo := MultipartUploadInfo{
 		FileHash:filehash,
 		FileSize:filesize,
-		UploadID:username+fmt.Sprint("%x", time.Now().UnixNano()),
+		UploadID:username+fmt.Sprintf("%x", time.Now().UnixNano()),
 		ChunkSize:5*1024*1024,
 		ChunkCount:int(math.Ceil(float64(filesize/(5*1024*1024)))),
 	}
